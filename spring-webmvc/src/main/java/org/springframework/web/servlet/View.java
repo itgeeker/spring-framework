@@ -42,11 +42,17 @@ import org.springframework.http.MediaType;
  * @see org.springframework.web.servlet.view.AbstractView
  * @see org.springframework.web.servlet.view.InternalResourceView
  */
+/*
+ * 视图基础接口
+ */
 public interface View {
 
 	/**
 	 * Name of the {@link HttpServletRequest} attribute that contains the response status code.
 	 * <p>Note: This attribute is not required to be supported by all View implementations.
+	 */
+	/*
+	 * HttpServletRequest中的属性名，其值是响应状态码，并不是被所有的视图都支持
 	 */
 	String RESPONSE_STATUS_ATTRIBUTE = View.class.getName() + ".responseStatus";
 
@@ -57,12 +63,18 @@ public interface View {
 	 *
 	 * <p>Note: This attribute is not required to be supported by all View implementations.
 	 */
+	/*
+	 * HttpServletRequest中的属性名,其值是路径变量map，键为uri模板上的变量名，值为uri上对应的值
+	 */
 	String PATH_VARIABLES = View.class.getName() + ".pathVariables";
 
 	/**
 	 * The {@link MediaType} selected during content negotiation, which may be
 	 * more specific than the one the View is configured with. For example:
 	 * "application/vnd.example-v1+xml" vs "application/*+xml".
+	 */
+	/*
+	 * 约定的MediaType
 	 */
 	String SELECTED_CONTENT_TYPE = View.class.getName() + ".selectedContentType";
 
@@ -72,6 +84,11 @@ public interface View {
 	 * before the actual rendering process.
 	 * @return the content type String (optionally including a character set),
 	 * or {@code null} if not predetermined.
+	 */
+	/*
+	 * 视图的ContentType
+	 * 如果预先定义，可以用于在实际渲染过程之前检查内容类型
+	 * @return String 预先定义的内容类型（可选包括character set），或者如果没有预先确定，则返回null
 	 */
 	String getContentType();
 
@@ -86,6 +103,15 @@ public interface View {
 	 * @param request current HTTP request
 	 * @param response HTTP response we are building
 	 * @throws Exception if rendering failed
+	 */
+	/*
+	 * 用指定model渲染视图
+	 * 1 准备request请求对象; 以jsp为例，这意味着设置model数据到request域中
+	 * 2 渲染视图
+	 * @param model 键和对应model的Map
+	 * @param request  http request
+	 * @param response 正构建的http response
+	 * @throws Exception 渲染失败抛出异常
 	 */
 	void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
