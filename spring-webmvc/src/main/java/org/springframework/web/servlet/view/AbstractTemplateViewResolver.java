@@ -27,6 +27,7 @@ package org.springframework.web.servlet.view;
  * @see AbstractTemplateView
  * @see org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver
  */
+//抽象模板视图解析器
 public class AbstractTemplateViewResolver extends UrlBasedViewResolver {
 
 	private boolean exposeRequestAttributes = false;
@@ -95,8 +96,10 @@ public class AbstractTemplateViewResolver extends UrlBasedViewResolver {
 	}
 
 
+	//构建视图
 	@Override
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
+		//调用UrlBasedViewResolver去创建UrlBasedView视图
 		AbstractTemplateView view = (AbstractTemplateView) super.buildView(viewName);
 		view.setExposeRequestAttributes(this.exposeRequestAttributes);
 		view.setAllowRequestOverride(this.allowRequestOverride);

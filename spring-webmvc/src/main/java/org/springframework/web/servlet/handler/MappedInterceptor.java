@@ -16,13 +16,13 @@
 
 package org.springframework.web.servlet.handler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.util.PathMatcher;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Contains and delegates calls to a {@link HandlerInterceptor} along with
@@ -41,15 +41,16 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Brian Clozel
  * @since 3.0
  */
+//一个包括includePatterns和excludePatterns字符串集合并带有HandlerInterceptor的类。 很明显， 就是对于某些地址做特殊包括和排除的拦截器
 public final class MappedInterceptor implements HandlerInterceptor {
 
-	private final String[] includePatterns;
+	private final String[] includePatterns;	//地址包括
 
-	private final String[] excludePatterns;
+	private final String[] excludePatterns; //地址排除
 
-	private final HandlerInterceptor interceptor;
+	private final HandlerInterceptor interceptor; //拦截器
 
-	private PathMatcher pathMatcher;
+	private PathMatcher pathMatcher; //模式匹配器
 
 
 	/**

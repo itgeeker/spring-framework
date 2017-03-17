@@ -16,10 +16,10 @@
 
 package org.springframework.web.servlet;
 
+import org.springframework.web.method.HandlerMethod;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.method.HandlerMethod;
 
 /**
  * Extends {@code HandlerInterceptor} with a callback method invoked after the
@@ -57,6 +57,7 @@ import org.springframework.web.method.HandlerMethod;
  * @see org.springframework.web.context.request.async.CallableProcessingInterceptor
  * @see org.springframework.web.context.request.async.DeferredResultProcessingInterceptor
  */
+//异步处理器拦截器
 public interface AsyncHandlerInterceptor extends HandlerInterceptor {
 
 	/**
@@ -72,6 +73,7 @@ public interface AsyncHandlerInterceptor extends HandlerInterceptor {
 	 * execution, for type and/or instance examination
 	 * @throws Exception in case of errors
 	 */
+	//异步请求先支持preHandle、 然后执行afterConcurrentHandlingStarted。 异步线程完成之后执行preHandle、 postHandle、 afterCompletion。
 	void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception;
 

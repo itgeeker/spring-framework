@@ -50,6 +50,7 @@ public interface ViewResolver {
 	 * @throws Exception if the view cannot be resolved
 	 * (typically in case of problems creating an actual View object)
 	 */
+	//通过名称解析给定视图 viewName待解析的视图名
 	View resolveViewName(String viewName, Locale locale) throws Exception;
 
 }

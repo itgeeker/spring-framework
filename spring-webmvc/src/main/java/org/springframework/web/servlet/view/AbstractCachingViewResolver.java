@@ -16,16 +16,16 @@
 
 package org.springframework.web.servlet.view;
 
+import org.springframework.web.context.support.WebApplicationObjectSupport;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.context.support.WebApplicationObjectSupport;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
 
 /**
  * Convenient base class for {@link org.springframework.web.servlet.ViewResolver}
@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ViewResolver;
  * @author Juergen Hoeller
  * @see #loadView
  */
+//带有缓存功能的ViewResolver接口基础实现抽象类，该类有个属性名为viewAccessCache的以 "viewName_locale" 为key， View接口为value的Map
 public abstract class AbstractCachingViewResolver extends WebApplicationObjectSupport implements ViewResolver {
 
 	/** Default maximum number of entries for the view cache: 1024 */
@@ -140,9 +141,10 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	}
 
 
+	//解析视图名
 	@Override
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
-		if (!isCache()) {
+		if (!isCache()) { //缓存未启动
 			return createView(viewName, locale);
 		}
 		else {
@@ -240,6 +242,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * @throws Exception if the view couldn't be resolved
 	 * @see #loadView
 	 */
+	//创建实际View对象
 	protected View createView(String viewName, Locale locale) throws Exception {
 		return loadView(viewName, locale);
 	}
@@ -257,6 +260,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * @throws Exception if the view couldn't be resolved
 	 * @see #resolveViewName
 	 */
+	//子类必须实现这个方法，构建指定view的视图对象，返回的视图对象将被缓存
 	protected abstract View loadView(String viewName, Locale locale) throws Exception;
 
 }

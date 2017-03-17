@@ -16,10 +16,10 @@
 
 package org.springframework.web.servlet;
 
+import org.springframework.web.method.HandlerMethod;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.method.HandlerMethod;
 
 /**
  * Workflow interface that allows for customized handler execution chains.
@@ -72,6 +72,7 @@ import org.springframework.web.method.HandlerMethod;
  * @see org.springframework.web.servlet.theme.ThemeChangeInterceptor
  * @see javax.servlet.Filter
  */
+//处理器拦截器基础接口
 public interface HandlerInterceptor {
 
 	/**

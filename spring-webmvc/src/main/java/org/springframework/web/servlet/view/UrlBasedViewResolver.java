@@ -16,17 +16,17 @@
 
 package org.springframework.web.servlet.view;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.Ordered;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.servlet.View;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Simple implementation of the {@link org.springframework.web.servlet.ViewResolver}
@@ -88,7 +88,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * Such view names will not be resolved in the configured default
 	 * way but rather be treated as special shortcut.
 	 */
-	public static final String REDIRECT_URL_PREFIX = "redirect:";
+	public static final String REDIRECT_URL_PREFIX = "redirect:";  //重定向url
 
 	/**
 	 * Prefix for special view names that specify a forward URL (usually
@@ -96,29 +96,29 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * Such view names will not be resolved in the configured default
 	 * way but rather be treated as special shortcut.
 	 */
-	public static final String FORWARD_URL_PREFIX = "forward:";
+	public static final String FORWARD_URL_PREFIX = "forward:";		//转发url
 
 
-	private Class<?> viewClass;
+	private Class<?> viewClass;	//视图Class
 
-	private String prefix = "";
+	private String prefix = ""; //视图前缀
 
-	private String suffix = "";
+	private String suffix = "";	//视图后缀
 
-	private String contentType;
+	private String contentType;	//内容类型
 
-	private boolean redirectContextRelative = true;
+	private boolean redirectContextRelative = true; //重定向使用相对路径
 
-	private boolean redirectHttp10Compatible = true;
+	private boolean redirectHttp10Compatible = true;//兼容http1.0的重定向
 
-	private String[] redirectHosts;
+	private String[] redirectHosts;	//重定向主机数据
 
-	private String requestContextAttribute;
+	private String requestContextAttribute;	//对应AbstractView的三个同样属性，往requestContext请求域中存放属性
 
 	/** Map of static attributes, keyed by attribute name (String) */
-	private final Map<String, Object> staticAttributes = new HashMap<>();
+	private final Map<String, Object> staticAttributes = new HashMap<>();	//是否添加额外静态属性
 
-	private Boolean exposePathVariables;
+	private Boolean exposePathVariables;	//是否暴露路径变量
 
 	private Boolean exposeContextBeansAsAttributes;
 
@@ -447,11 +447,13 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @see #loadView
 	 * @see #requiredViewClass
 	 */
+	//依据逻辑视图名创建物理视图
 	@Override
 	protected View createView(String viewName, Locale locale) throws Exception {
 		// If this resolver is not supposed to handle the given view,
 		// return null to pass on to the next resolver in the chain.
-		if (!canHandle(viewName, locale)) {
+		//返回给定视图的解析器
+		if (!canHandle(viewName, locale)) { // 不支持给定视图
 			return null;
 		}
 		// Check for special "redirect:" prefix.
@@ -467,6 +469,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return new InternalResourceView(forwardUrl);
 		}
 		// Else fall back to superclass implementation: calling loadView.
+		//不是重定向和转发，创建物理视图，调用的还是loadView方法
 		return super.createView(viewName, locale);
 	}
 
@@ -500,9 +503,10 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
 	 */
+	//创建物理视图
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
-		AbstractUrlBasedView view = buildView(viewName);
+		AbstractUrlBasedView view = buildView(viewName); //真正创建物理视图的位置
 		View result = applyLifecycleMethods(viewName, view);
 		return (view.checkResource(locale) ? result : null);
 	}
@@ -525,19 +529,20 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @throws Exception if the view couldn't be resolved
 	 * @see #loadView(String, java.util.Locale)
 	 */
+	//构建物理view视图
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
-		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(getViewClass());
-		view.setUrl(getPrefix() + viewName + getSuffix());
+		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(getViewClass()); //实例化物理视图
+		view.setUrl(getPrefix() + viewName + getSuffix()); //设置物理视图的url
 
-		String contentType = getContentType();
+		String contentType = getContentType();	//设置物理视图类型
 		if (contentType != null) {
 			view.setContentType(contentType);
 		}
 
-		view.setRequestContextAttribute(getRequestContextAttribute());
-		view.setAttributesMap(getAttributesMap());
+		view.setRequestContextAttribute(getRequestContextAttribute());	//设置物理视图的请求域属性
+		view.setAttributesMap(getAttributesMap());	//设置物理视图的属性map
 
-		Boolean exposePathVariables = getExposePathVariables();
+		Boolean exposePathVariables = getExposePathVariables();		//暴露路径变量
 		if (exposePathVariables != null) {
 			view.setExposePathVariables(exposePathVariables);
 		}
@@ -550,7 +555,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			view.setExposedContextBeanNames(exposedContextBeanNames);
 		}
 
-		return view;
+		return view; //返回物理View实例
 	}
 
 }

@@ -16,11 +16,11 @@
 
 package org.springframework.web.servlet.handler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Abstract adapter class for the {@link AsyncHandlerInterceptor} interface,
@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Juergen Hoeller
  * @since 05.12.2003
  */
+//AsyncHandlerInterceptor的抽象适配器，自定义拦截器的话，一般集成HandlerInterceptorAdapter
 public abstract class HandlerInterceptorAdapter implements AsyncHandlerInterceptor {
 
 	/**
