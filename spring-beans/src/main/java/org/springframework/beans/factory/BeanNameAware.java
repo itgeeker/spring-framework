@@ -47,6 +47,9 @@ public interface BeanNameAware extends Aware {
 	 * "#..." suffixes. Use the {@link BeanFactoryUtils#originalBeanName(String)}
 	 * method to extract the original bean name (without suffix), if desired.
 	 */
+	/*
+	 * 该接口提供了回调本身的能力，实现该接口的bean，能访问到本身bean的name
+	 */
 	void setBeanName(String name);
 
 }

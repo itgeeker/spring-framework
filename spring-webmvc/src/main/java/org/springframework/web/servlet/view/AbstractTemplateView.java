@@ -16,14 +16,14 @@
 
 package org.springframework.web.servlet.view;
 
-import java.util.Enumeration;
-import java.util.Map;
+import org.springframework.web.servlet.support.RequestContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.web.servlet.support.RequestContext;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Adapter base class for template-based view technologies such as FreeMarker,
@@ -41,6 +41,7 @@ import org.springframework.web.servlet.support.RequestContext;
  * @see AbstractTemplateViewResolver
  * @see org.springframework.web.servlet.view.freemarker.FreeMarkerView
  */
+//模板视图的抽象类
 public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 
 	/**
@@ -111,9 +112,11 @@ public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 
 
 	@Override
+	//渲染合并输出模型
 	protected final void renderMergedOutputModel(
 			Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		//将request域中的属性暴露到model中
 		if (this.exposeRequestAttributes) {
 			for (Enumeration<String> en = request.getAttributeNames(); en.hasMoreElements();) {
 				String attribute = en.nextElement();
@@ -130,6 +133,7 @@ public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 			}
 		}
 
+		//将session域中的属性暴露到model中
 		if (this.exposeSessionAttributes) {
 			HttpSession session = request.getSession(false);
 			if (session != null) {
@@ -149,6 +153,7 @@ public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 			}
 		}
 
+		//将MacroHelpers暴露到model中
 		if (this.exposeSpringMacroHelpers) {
 			if (model.containsKey(SPRING_MACRO_REQUEST_CONTEXT_ATTRIBUTE)) {
 				throw new ServletException(
@@ -162,6 +167,7 @@ public abstract class AbstractTemplateView extends AbstractUrlBasedView {
 
 		applyContentType(response);
 
+		//渲染合并模板模型
 		renderMergedTemplateModel(model, request, response);
 	}
 

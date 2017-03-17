@@ -16,14 +16,14 @@
 
 package org.springframework.web.servlet.view;
 
-import java.util.Map;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.util.StringUtils;
-import org.springframework.web.util.WebUtils;
+import java.util.Map;
 
 /**
  * Wrapper for a JSP or other resource within the same web application.
@@ -60,6 +60,7 @@ import org.springframework.web.util.WebUtils;
  * @see InternalResourceViewResolver
  * @see JstlView
  */
+//jsp视图
 public class InternalResourceView extends AbstractUrlBasedView {
 
 	private boolean alwaysInclude = false;
@@ -131,6 +132,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * Render the internal resource given the specified model.
 	 * This includes setting the model as request attributes.
 	 */
+	//渲染合并输出模型
 	@Override
 	protected void renderMergedOutputModel(
 			Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -152,6 +154,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 		}
 
 		// If already included or response already committed, perform include, else forward.
+		//include
 		if (useInclude(request, response)) {
 			response.setContentType(getContentType());
 			if (logger.isDebugEnabled()) {
@@ -160,6 +163,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 			rd.include(request, response);
 		}
 
+		//forwarded
 		else {
 			// Note: The forwarded resource is supposed to determine the content type itself.
 			if (logger.isDebugEnabled()) {

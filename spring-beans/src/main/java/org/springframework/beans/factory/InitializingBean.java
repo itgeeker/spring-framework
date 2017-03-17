@@ -33,6 +33,9 @@ package org.springframework.beans.factory;
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getInitMethodName
  * @see org.springframework.context.ApplicationContextAware
  */
+/*
+ * 初始化Bean接口
+ */
 public interface InitializingBean {
 
 	/**
@@ -43,6 +46,9 @@ public interface InitializingBean {
 	 * exception in the event of misconfiguration.
 	 * @throws Exception in the event of misconfiguration (such
 	 * as failure to set an essential property) or if initialization fails.
+	 */
+	/*
+	 * 初始化Bean的方法
 	 */
 	void afterPropertiesSet() throws Exception;
 

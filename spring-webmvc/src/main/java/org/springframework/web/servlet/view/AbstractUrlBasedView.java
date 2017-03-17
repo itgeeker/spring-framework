@@ -16,9 +16,9 @@
 
 package org.springframework.web.servlet.view;
 
-import java.util.Locale;
-
 import org.springframework.beans.factory.InitializingBean;
+
+import java.util.Locale;
 
 /**
  * Abstract base class for URL-based views. Provides a consistent way of
@@ -27,8 +27,12 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Juergen Hoeller
  * @since 13.12.2003
  */
+/*
+ * 基于url的抽象视图
+ */
 public abstract class AbstractUrlBasedView extends AbstractView implements InitializingBean {
 
+	//请求转发的url
 	private String url;
 
 

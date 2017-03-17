@@ -16,20 +16,6 @@
 
 package org.springframework.web.servlet.view;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
@@ -37,6 +23,13 @@ import org.springframework.web.context.support.ContextExposingHttpServletRequest
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.support.RequestContext;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Abstract base class for {@link org.springframework.web.servlet.View}
@@ -57,27 +50,50 @@ import org.springframework.web.servlet.support.RequestContext;
  * @see #setAttributesMap
  * @see #renderMergedOutputModel
  */
+/*
+ * 抽象视图类
+ */
 public abstract class AbstractView extends WebApplicationObjectSupport implements View, BeanNameAware {
 
 	/** Default content type. Overridable as bean property. */
+	/*
+	 * SpringMVC默认的视图内容类型
+	 */
 	public static final String DEFAULT_CONTENT_TYPE = "text/html;charset=ISO-8859-1";
 
 	/** Initial size for the temporary output byte array (if any) */
+	/*
+	 * 临时输出流的字节数组大小：4k
+	 */
 	private static final int OUTPUT_BYTE_ARRAY_INITIAL_SIZE = 4096;
 
-
+	//视图bean的名称
 	private String beanName;
 
+	//对应View接口中getContentType()
 	private String contentType = DEFAULT_CONTENT_TYPE;
 
+	//请求上下文属性
 	private String requestContextAttribute;
 
+	/*
+	 * 静态属性
+	 */
 	private final Map<String, Object> staticAttributes = new LinkedHashMap<>();
 
+	/*
+	 * 是否暴露路径变量pathVariables的值到model中,View接口中的 PATH_VARIABLES
+	 */
 	private boolean exposePathVariables = true;
 
+	/*
+	 * 是否暴露上下文bean作为属性
+	 */
 	private boolean exposeContextBeansAsAttributes = false;
 
+	/*
+	 * 上下文bean的名称set
+	 */
 	private Set<String> exposedContextBeanNames;
 
 
@@ -86,6 +102,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * <p>Framework code must call this when constructing views.
 	 */
 	@Override
+	//调用设置视图名
 	public void setBeanName(String beanName) {
 		this.beanName = beanName;
 	}
@@ -94,6 +111,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * Return the view's name. Should never be {@code null},
 	 * if the view was correctly configured.
 	 */
+	//返回试图名
 	public String getBeanName() {
 		return this.beanName;
 	}
@@ -138,6 +156,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * the View instance configuration. "Dynamic" attributes, on the other hand,
 	 * are values passed in as part of the model.
 	 */
+	//通过CSV字符串设置静态属性，动态属性是通过model传递
 	public void setAttributesCSV(String propString) throws IllegalArgumentException {
 		if (propString != null) {
 			StringTokenizer st = new StringTokenizer(propString, ",");
@@ -176,6 +195,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * or a "props" element in XML bean definitions.
 	 * @see org.springframework.beans.propertyeditors.PropertiesEditor
 	 */
+	//可以通过静态配置文件properties或yml文件设置视图的前缀和后缀到静态属性中
 	public void setAttributes(Properties attributes) {
 		CollectionUtils.mergePropertiesIntoMap(attributes, this.staticAttributes);
 	}
@@ -291,6 +311,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * Delegates to renderMergedOutputModel for the actual rendering.
 	 * @see #renderMergedOutputModel
 	 */
+	// 通过给定的model，外加静态属性，请求域属性渲染视图，如果需要，委托renderMergedOutputModel去做真正渲染
 	@Override
 	public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (logger.isTraceEnabled()) {
@@ -298,8 +319,10 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 				" and static attributes " + this.staticAttributes);
 		}
 
+		//创建合并model输出模型
 		Map<String, Object> mergedModel = createMergedOutputModel(model, request, response);
 		prepareResponse(request, response);
+		//渲染合并model输出，子类实现
 		renderMergedOutputModel(mergedModel, getRequestToExpose(request), response);
 	}
 
@@ -307,14 +330,17 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * Creates a combined output Map (never {@code null}) that includes dynamic values and static attributes.
 	 * Dynamic values take precedence over static attributes.
 	 */
+	//动态属性优先于静态属性
 	protected Map<String, Object> createMergedOutputModel(Map<String, ?> model, HttpServletRequest request,
 			HttpServletResponse response) {
 
+		//暴露路径变量
 		@SuppressWarnings("unchecked")
 		Map<String, Object> pathVars = (this.exposePathVariables ?
 				(Map<String, Object>) request.getAttribute(View.PATH_VARIABLES) : null);
 
 		// Consolidate static and dynamic model attributes.
+		//合并 静态+pathVars+model
 		int size = this.staticAttributes.size();
 		size += (model != null ? model.size() : 0);
 		size += (pathVars != null ? pathVars.size() : 0);
@@ -360,6 +386,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 */
+	//准备渲染响应
 	protected void prepareResponse(HttpServletRequest request, HttpServletResponse response) {
 		if (generatesDownloadContent()) {
 			response.setHeader("Pragma", "private");
